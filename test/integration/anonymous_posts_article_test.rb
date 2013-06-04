@@ -1,15 +1,14 @@
 require 'test_helper'
 
 class AnonymousPostsArticleTestTest < ActionDispatch::IntegrationTest
-  test "view a list of articles" do
-      Post.create!(title: "First Post!!", body: "This is awkward... I have nothing to say :(")
-      Post.create!(title: "Wow, it's been a while!", body: "And yet, I'm still not a writter :( :( lolol")
-
-      visit '/posts'
-      sleep 1
-      assert_equal 2, Post.count
-      assert_include page.body, "All Posts"
-      assert_include page.body, "First Post!!"
-      assert_include page.body, "Wow, it's been a while!"
-    end
+  test "posting a new article" do
+    visit '/'
+    click_link 'Write Post'
+    fill_in 'Title', with: 'My First Post!'
+    fill_in 'Body', with: "I don't have anything to say"
+    click_button 'Submit Post'
+    assert_include page.body, "Your post has now been published!"
+    visit '/posts'
+    assert_include page.body, 'My First Post!'
+  end
 end
